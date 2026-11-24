@@ -17,5 +17,10 @@ int main () {
     subBytes(matrix);
     std::cout << "SubBytes:" << std::endl;
     print_matrix(matrix);
+
+    ShiftRows(matrix);
+    std::cout << "ShiftRows:" << std::endl;
+    print_matrix(matrix);
+
     return 0;
 }

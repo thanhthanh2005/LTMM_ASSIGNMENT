@@ -80,3 +80,14 @@ void subBytes(uint8_t input[4][4]) {
         }
     }
 }
+
+void ShiftRows(uint8_t state[4][4])
+{
+    uint8_t temp[4];
+    for (int col = 0; col < 4; col++) {
+        for (int row = 0; row < 4; row++) {
+            state[row][col] = state[(col - row + 4) % 4][col];
+        }
+    }
+}
+
