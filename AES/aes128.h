@@ -20,7 +20,7 @@ void matrix_to_output
 }   
 
 void print_matrix
-(uint8_t matrix[4][4]) { // in ma tran 4x4
+(uint8_t matrix[4][4]) { // in ma tran 4x4 theo hexa16
     for (int rows = 0; rows < 4; rows++) {
         for (int cols = 0; cols < 4; cols++) {
             std::cout << std::hex << (int)matrix[rows][cols] << " ";
@@ -30,10 +30,16 @@ void print_matrix
 }
 
 void addRoundkey
-(uint8_t matrix[4][4], uint8_t roundkey[4][4]) { // XOR ma tran state voi roundkey 128 bit
+(uint8_t matrix[4][4], uint8_t roundkey[4][4]) { // XOR ma tran input voi roundkey 128 bit
     for (int cols = 0; cols < 4; cols++) {
         for (int rows = 0; rows < 4; rows++) {
             matrix[rows][cols] ^= roundkey[rows][cols];
         }
     }
+}
+
+void subBytes (uint8_t matrix[4][4])
+{
+    
+
 }
