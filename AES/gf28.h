@@ -52,8 +52,9 @@ inline uint8_t inverse(uint8_t x) {
     for (int i = 1; i < 256; i++) { 
         string coeff_i = NumToBinary(i);
         if (multiple_mod_result(coeff_x, coeff_i) == 1) {   // neu bang 1 thi i la nghich dao cua x
-            return i;
+            return static_cast<uint8_t>(i);
         }
     }
+    return 0; 
 }
 

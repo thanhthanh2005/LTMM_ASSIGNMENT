@@ -1,5 +1,6 @@
 #include <cstdint>
 #include <iostream>
+#include "gf28.h"
 
 void input_to_matrix
 (uint8_t matrix[4][4], uint8_t input[16]) { // chuyen input 16 byte sang ma tran 4x4
@@ -38,8 +39,34 @@ void addRoundkey
     }
 }
 
-void subBytes (uint8_t matrix[4][4])
-{
-    
+uint8_t sbox(uint8_t a) {
+    uint8_t b = inverse(a);
 
+    int b_bits[8];
+    int c[8] = {1, 1, 0, 0, 0, 1, 1, 0}; // vector c
+    int y[8] = {0};
+    
+    // chuyen b sang dang bit array
+    int temp = b;
+    for (int i = 0; i < 8; i++) {
+        b_bits[i] = temp & 1;
+        temp >>= 1;
+    }
+    
+    // dung cong thuc y = A.x^-1 + c
+    for (int i = 0; i < 8; i++) {
+        y[i] = b_bits[i] 
+            ^ b_bits[(i + 4) % 8] 
+            ^ b_bits[(i + 5) % 8] 
+            ^ b_bits[(i + 6) % 8] 
+            ^ b_bits[(i + 7) % 8] 
+            ^ c[i];
+    }
+    
+    // ghep cac bit y_array lai thanh 1 byte uint8_t
+    uint8_t result = 0;
+    for (int i = 0; i < 8; i++) {
+        result = result | (y[i] << i);
+    }
+    return static_cast<uint8_t>(result);
 }
