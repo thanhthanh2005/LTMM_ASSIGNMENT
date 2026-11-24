@@ -70,3 +70,13 @@ uint8_t sbox(uint8_t a) {
     }
     return static_cast<uint8_t>(result);
 }
+
+void subBytes(uint8_t input[4][4]) {
+    for (int cols = 0; cols < 4; cols++)
+    {
+        for (int rows = 0; rows < 4; rows++)
+        {
+            input[rows][cols] = sbox(input[rows][cols]);
+        }
+    }
+}
