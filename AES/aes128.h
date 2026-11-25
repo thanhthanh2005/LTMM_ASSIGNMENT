@@ -91,3 +91,29 @@ void ShiftRows(uint8_t state[4][4])
     }
 }
 
+void MixColumns(uint8_t state[4][4]) {
+    uint8_t temp[4][4];
+    for (int cols = 0; cols < 4; cols++) {
+        temp[0][cols] = multiple(0x02, state[0][cols])
+            ^ multiple(0x03, state[1][cols])
+            ^ state[2][cols]
+            ^ state[3][cols];
+        temp[1][cols] = state[0][cols]
+            ^ multiple(0x02, state[1][cols])
+            ^ multiple(0x03, state[2][cols])
+            ^ state[3][cols];
+        temp[2][cols] = state[0][cols]
+            ^ state[1][cols]
+            ^ multiple(0x02, state[2][cols]);
+        temp[3][cols] = multiple(0x03, state[0][cols])
+            ^ state[1][cols]
+            ^ state[2][cols]
+            ^ multiple(0x02, state[3][cols]);
+    }
+    for (int cols = 0; cols < 4; cols++) {
+        for (int rows = 0; rows < 4; rows++) {
+            state[rows][cols] = temp[rows][cols];
+        }
+    }
+}
+

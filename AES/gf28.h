@@ -58,3 +58,10 @@ inline uint8_t inverse(uint8_t x) {
     return 0; 
 }
 
+inline uint8_t multiple(uint8_t a, uint8_t b) {
+    string coeff_a = NumToBinary(a);
+    string coeff_b = NumToBinary(b);
+    unsigned int result = multiple_mod_result(coeff_a, coeff_b);
+    return static_cast<uint8_t>(result);
+}
+
