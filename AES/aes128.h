@@ -117,3 +117,7 @@ void MixColumns(uint8_t state[4][4]) {
     }
 }
 
+void key_expansion(uint8_t key[16]) {  // Sinh khóa con subkey
+    const uint8_t rcon[10] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36};
+    
+}
