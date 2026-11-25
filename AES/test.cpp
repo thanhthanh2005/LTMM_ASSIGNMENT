@@ -22,5 +22,9 @@ int main () {
     std::cout << "ShiftRows:" << std::endl;
     print_matrix(matrix);
 
+    MixColumns(matrix);
+    std::cout << "MixColumns:" << std::endl;
+    print_matrix(matrix);
+
     return 0;
 }
