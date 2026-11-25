@@ -83,10 +83,15 @@ void subBytes(uint8_t input[4][4]) {
 
 void ShiftRows(uint8_t state[4][4])
 {
-    uint8_t temp[4];
-    for (int col = 0; col < 4; col++) {
-        for (int row = 0; row < 4; row++) {
-            state[row][col] = state[(col - row + 4) % 4][col];
+    uint8_t temp[4][4];
+    for (int rows = 0; rows < 4; rows++) {
+        for (int cols = 0; cols < 4; cols++) {
+            temp[rows][cols] = state[rows][(cols + rows) % 4];  // shift left theo hang
+        }
+    }
+    for (int rows = 0; rows < 4; rows++) {
+        for (int cols = 0; cols < 4; cols++) {
+            state[rows][cols] = temp[rows][cols];
         }
     }
 }
