@@ -130,12 +130,11 @@ void key_expansion(uint8_t key[16], uint8_t subkeys[11][4][4]) {  // Sinh khóa 
     input_to_matrix(subkeys[0], key);
 
     for (int round = 1; round <= 10; round++) {
-        uint8_t temp[4];
+        uint8_t temp[4] = {0};
+
+        // Lấy cột cuối cùng của subkey trước đó và xoay trái 1 byte
         for (int i = 0; i < 4; i++) {
-            temp[i] = subkeys[round - 1][i][3]; // Lấy cột cuối cùng của subkey trước đó
-        }
-        for (int i = 0; i < 4; i++) {
-            temp[i] = temp[(i + 1) % 4]; // Dịch trái 1 byte, tương đương dịch cột lên 1 hàng
+            temp[i] = subkeys[round-1][(i + 1) % 4][3]; // dịch vòng trái 1 byte
         }
         for (int i = 0; i < 4; i++) {
             temp[i] = sbox(temp[i]); // Thay thế bằng S-box
@@ -144,7 +143,7 @@ void key_expansion(uint8_t key[16], uint8_t subkeys[11][4][4]) {  // Sinh khóa 
         
         // XOR với cột đầu tiên của subkey trước đó: w[i] = w[i-4] xor g(w[i-1])
         for (int rows = 0; rows < 4; rows++) {
-            subkeys[round][rows][0] ^= temp[rows];
+            subkeys[round][rows][0] = subkeys[round - 1][rows][0] ^ temp[rows];
         }
 
         // Các cột còn lại: w[i] = w[i-4] xor w[i-1]
@@ -153,6 +152,5 @@ void key_expansion(uint8_t key[16], uint8_t subkeys[11][4][4]) {  // Sinh khóa 
                 subkeys[round][rows][cols] = subkeys[round -1][rows][cols] ^ subkeys[round][rows][cols - 1];
             }
         }
-       
     }
 }
