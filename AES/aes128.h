@@ -109,7 +109,8 @@ void MixColumns(uint8_t state[4][4]) {
             ^ state[3][cols];
         temp[2][cols] = state[0][cols]
             ^ state[1][cols]
-            ^ multiple(0x02, state[2][cols]);
+            ^ multiple(0x02, state[2][cols])
+            ^ multiple(0x03, state[3][cols]);
         temp[3][cols] = multiple(0x03, state[0][cols])
             ^ state[1][cols]
             ^ state[2][cols]
@@ -122,7 +123,36 @@ void MixColumns(uint8_t state[4][4]) {
     }
 }
 
-void key_expansion(uint8_t key[16]) {  // Sinh khóa con subkey
+void key_expansion(uint8_t key[16], uint8_t subkeys[11][4][4]) {  // Sinh khóa con subkey
     const uint8_t rcon[10] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36};
     
+    // Chuyển khóa chính sang ma trận 4x4
+    input_to_matrix(subkeys[0], key);
+
+    for (int round = 1; round <= 10; round++) {
+        uint8_t temp[4];
+        for (int i = 0; i < 4; i++) {
+            temp[i] = subkeys[round - 1][i][3]; // Lấy cột cuối cùng của subkey trước đó
+        }
+        for (int i = 0; i < 4; i++) {
+            temp[i] = temp[(i + 1) % 4]; // Dịch trái 1 byte, tương đương dịch cột lên 1 hàng
+        }
+        for (int i = 0; i < 4; i++) {
+            temp[i] = sbox(temp[i]); // Thay thế bằng S-box
+        }   
+        temp[0] ^= rcon[round - 1]; // XOR word[0] với Rcon = g(w)
+        
+        // XOR với cột đầu tiên của subkey trước đó: w[i] = w[i-4] xor g(w[i-1])
+        for (int rows = 0; rows < 4; rows++) {
+            subkeys[round][rows][0] ^= temp[rows];
+        }
+
+        // Các cột còn lại: w[i] = w[i-4] xor w[i-1]
+        for (int cols = 1; cols < 4; cols ++) {
+            for (int rows = 0; rows < 4; rows++) {
+                subkeys[round][rows][cols] = subkeys[round -1][rows][cols] ^ subkeys[round][rows][cols - 1];
+            }
+        }
+       
+    }
 }
